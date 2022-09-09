@@ -7,6 +7,10 @@ RUN useradd -m build && \
     # Allow build to run stuff as root (to install dependencies):
     echo "build ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/build
 
+RUN sed -i 's/^COMPRESSZST=.*/COMPRESSZST=(zstd -T0 -c -z -q -)/' /etc/makepkg.conf && \
+    sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
+
+
 # Continue execution (and CMD) as build:
 USER build
 WORKDIR /home/build
